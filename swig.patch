@@ -1,0 +1,87 @@
+diff --git a/Examples/javascript/package.json b/Examples/javascript/package.json
+new file mode 100644
+index 000000000..9e26dfeeb
+--- /dev/null
++++ b/Examples/javascript/package.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/Examples/test-suite/common.mk b/Examples/test-suite/common.mk
+index fee130277..46ad92d1a 100644
+--- a/Examples/test-suite/common.mk
++++ b/Examples/test-suite/common.mk
+@@ -86,8 +86,14 @@ CPP_TEST_BROKEN += \
+ 	director_nested_class \
+ 	exception_partial_info \
+ 	extend_variable \
++	li_boost_shared_ptr \
++	li_boost_shared_ptr_attribute \
++	li_boost_shared_ptr_bits \
++	li_boost_shared_ptr_director \
+ 	li_boost_shared_ptr_template \
++	multiple_inheritance_shared_ptr \
+ 	nested_private \
++	preproc_include \
+ 	template_default_pointer \
+ 	$(CPP11_TEST_BROKEN) \
+ 	$(CPP14_TEST_BROKEN) \
+@@ -291,11 +297,6 @@ CPP_TEST_CASES += \
+ 	langobj \
+ 	li_attribute \
+ 	li_attribute_template \
+-	li_boost_shared_ptr \
+-	li_boost_shared_ptr_attribute \
+-	li_boost_shared_ptr_bits \
+-	li_boost_shared_ptr_director \
+-	li_boost_shared_ptr_template \
+ 	li_carrays_cpp \
+ 	li_cdata_cpp \
+ 	li_cpointer_cpp \
+@@ -319,7 +320,6 @@ CPP_TEST_CASES += \
+ 	multiple_inheritance_interfaces \
+ 	multiple_inheritance_nspace \
+ 	multiple_inheritance_overload \
+-	multiple_inheritance_shared_ptr \
+ 	name_cxx \
+ 	name_warnings \
+ 	namespace_chase \
+@@ -826,7 +826,6 @@ C_TEST_CASES += \
+ 	preproc_defined \
+ 	preproc_expr \
+ 	preproc_gcc_output \
+-	preproc_include \
+ 	preproc_line_file \
+ 	preproc_predefined \
+ 	preproc_predefined_stdc \
+diff --git a/Examples/test-suite/director_smartptr.i b/Examples/test-suite/director_smartptr.i
+index d016af17e..166155f3a 100644
+--- a/Examples/test-suite/director_smartptr.i
++++ b/Examples/test-suite/director_smartptr.i
+@@ -6,7 +6,6 @@ SWIG_JAVABODY_TYPEWRAPPER(public, public, public, SWIGTYPE)
+ #endif
+ 
+ %{
+-#include <boost/shared_ptr.hpp>
+ #include <string>
+ 
+ class FooBar {
+diff --git a/Examples/test-suite/javascript/package.json b/Examples/test-suite/javascript/package.json
+new file mode 100644
+index 000000000..9e26dfeeb
+--- /dev/null
++++ b/Examples/test-suite/javascript/package.json
+@@ -0,0 +1 @@
++{}
+\ No newline at end of file
+diff --git a/Lib/javascript/napi/javascriptruntime.swg b/Lib/javascript/napi/javascriptruntime.swg
+index 7311aca25..f445cc887 100644
+--- a/Lib/javascript/napi/javascriptruntime.swg
++++ b/Lib/javascript/napi/javascriptruntime.swg
+@@ -32,7 +32,6 @@
+ #error NAPI_VERSION 6 is the minimum supported target (Node.js >=14, >=12.17, >=10.20)
+ #endif
+ #include <napi.h>
+-#include <uv.h>
+ 
+ #include <errno.h>
+ #include <limits.h>

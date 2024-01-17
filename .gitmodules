@@ -1,0 +1,6 @@
+[submodule "deps/adaptagrams"]
+	path = deps/adaptagrams
+	url = https://github.com/mjwybrow/adaptagrams.git
+[submodule "deps/swig"]
+	path = deps/swig
+	url = https://github.com/mmomtchev/swig.git

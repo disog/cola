@@ -1,0 +1,86 @@
+{
+  "name": "@diegosogari/cola",
+  "version": "0.1.0",
+  "description": "JavaScript Node-API port of the [Adaptagrams](http://www.adaptagrams.org/) project",
+  "keywords": [
+    "graph",
+    "layout"
+  ],
+  "homepage": "https://github.com/diegosogari/cola#readme",
+  "bugs": {
+    "url": "https://github.com/diegosogari/cola/issues"
+  },
+  "license": "LGPL-2.1-only",
+  "author": "Diego Sogari",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diegosogari/cola.git"
+  },
+  "dependencies": {
+    "@emnapi/node-binding": "^0.45.0",
+    "@emnapi/runtime": "^0.45.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "cmake-js": "^7.3.0",
+    "emnapi": "^0.45.0",
+    "eslint": "^8.56.0",
+    "husky": "^8.0.0",
+    "node-addon-api": "^7.1.0",
+    "node-api-headers": "^1.1.0",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
+  },
+  "engines": {
+    "node": ">=16.15.0",
+    "npm": ">=8"
+  },
+  "binary": {
+    "napi_versions": [
+      9
+    ]
+  },
+  "prettier": {
+    "printWidth": 100
+  },
+  "scripts": {
+    "prepublishOnly": "npm run lint && npm run dist && npm run test",
+    "install": "husky install && git submodule update --init",
+    "dist": "cp -f build-bind-wasm/binding.* dist && tsc",
+    "pretest": "eslint lib",
+    "test": "vitest run",
+    "help": "cat usage.txt",
+    "swig:diff": "git -C deps/swig diff -p > swig.patch",
+    "swig:patch": "git -C deps/swig restore . && git -C deps/swig clean -f && git -C deps/swig apply ../../swig.patch",
+    "swig:reconf": "autoreconf -ivf -I Tools/config deps/swig",
+    "swig:config": "mkdir -p build-swig && cd build-swig && ../deps/swig/configure --disable-ccache --without-alllang --with-javascript",
+    "swig:make": "make -C build-swig",
+    "swig:check": "echo '{}' > build-swig/Examples/test-suite/javascript/package.json && make -C build-swig check",
+    "swig:clean": "make -C build-swig clean",
+    "swig:generate": "./build-swig/preinst-swig -javascript -typescript -napi -c++ -DSWIGJS -DNDEBUG -outdir dist -o src/cola.cc src/cola.i",
+    "cola:diff": "git -C deps/adaptagrams diff -p > cola.patch",
+    "cola:patch": "git -C deps/adaptagrams restore . && git -C deps/adaptagrams clean -f && git -C deps/adaptagrams apply ../../cola.patch",
+    "cola:reconf": "mkdir -p deps/adaptagrams/cola/m4 && autoreconf -ivf deps/adaptagrams/cola",
+    "cola:node:config": "mkdir -p build-cola-node && cd build-cola-node && ../deps/adaptagrams/cola/configure --disable-dialect",
+    "cola:node:make": "make -C build-cola-node CPPFLAGS=-I..",
+    "cola:node:check": "for dir in build-cola-node/*/tests; do mkdir -p \"${dir}/output\"; done && make -C build-cola-node check CPPFLAGS=-I../..",
+    "cola:node:clean": "make -C build-cola-node clean",
+    "cola:wasm:config": "mkdir -p build-cola-wasm && cd build-cola-wasm && ac_cv_exeext=.cjs emconfigure ../deps/adaptagrams/cola/configure --disable-dialect --disable-shared",
+    "cola:wasm:make": "emmake make -C build-cola-wasm CPPFLAGS='-I.. -fwasm-exceptions'",
+    "cola:wasm:check": "for dir in build-cola-wasm/*/tests; do mkdir -p \"${dir}/output\"; done && emmake make -C build-cola-wasm check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
+    "cola:wasm:clean": "emmake make -C build-cola-wasm clean",
+    "bind:node:config": "cmake-js configure -O build-bind-node -m",
+    "bind:node:make": "make -C build-bind-node",
+    "bind:node:clean": "make -C build-bind-node clean",
+    "bind:wasm:config": "cmake-js configure -O build-bind-wasm -m $(echo `emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
+    "bind:wasm:make": "emmake make -C build-bind-wasm",
+    "bind:wasm:clean": "emmake make -C build-bind-wasm clean"
+  }
+}

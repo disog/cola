@@ -1,0 +1,205 @@
+diff --git a/cola/Makefile.am b/cola/Makefile.am
+index 180f2ae9..c902ad5c 100644
+--- a/cola/Makefile.am
++++ b/cola/Makefile.am
+@@ -1,4 +1,6 @@
+ ACLOCAL_AMFLAGS = -I m4
+ AUTOMAKE_OPTIONS = gnu
+-SUBDIRS = libavoid libvpsc libcola libtopology libdialect
+-
++SUBDIRS = libavoid libvpsc libcola libtopology
++if DIALECT
++  SUBDIRS += libdialect
++endif
+diff --git a/cola/adaptagrams.i b/cola/adaptagrams.i
+index e3199dac..b252662e 100644
+--- a/cola/adaptagrams.i
++++ b/cola/adaptagrams.i
+@@ -35,6 +35,7 @@
+ #include <libtopology/cola_topology_addon.h>
+ #include <libavoid/libavoid.h>
+ #include <libtopology/orthogonal_topology.h>
++#ifndef SWIGJS
+ #include <libdialect/aca.h>
+ #include <libdialect/chains.h>
+ #include <libdialect/commontypes.h>
+@@ -52,6 +53,7 @@
+ #include <libdialect/routing.h>
+ #include <libdialect/treeplacement.h>
+ #include <libdialect/trees.h>
++#endif
+ /* Includes the header in the wrapper code */
+ 
+ using namespace Avoid;
+@@ -59,7 +61,9 @@ using namespace cola;
+ using namespace hull;
+ using namespace vpsc;
+ using namespace topology;
++#ifndef SWIGJS
+ using namespace dialect;
++#endif
+ 
+ %}
+ 
+@@ -107,6 +111,7 @@ using namespace dialect;
+ %ignore topology::assertNoZeroLengthEdgeSegments(const Edges& es);
+ %ignore topology::compute_stress(const Edges&);
+ %ignore topology::printEdges(const Edges&);
++#ifndef SWIGJS
+ %ignore dialect::Node::operator=(const dialect::Node&);
+ %ignore dialect::Edge::operator=(const dialect::Edge&);
+ %ignore dialect::Graph::operator=(const Graph);
+@@ -118,13 +123,16 @@ using namespace dialect;
+ %ignore dialect::identifyRootNode(const Graph&);
+ %ignore dialect::negateSepDir(SepDir);
+ %ignore dialect::swap(Graph&, Graph&);
++#endif
+ 
+ %include "std_string.i"
+ %include "std_vector.i"
+ %include "std_deque.i"
+ %include "std_pair.i"
+ %include "std_map.i"
++#ifndef SWIGJS
+ %include "std_shared_ptr.i"
++#endif
+ 
+ #ifdef SWIGJAVA
+ /* Wrap every C++ action in try/catch statement so we convert all 
+@@ -202,12 +210,14 @@ class ColaException {
+ %nodefaultdtor topology::Edge;
+ %nodefaultdtor topology::EdgePoint;
+ %nodefaultdtor topology::ColaTopologyAddon;
++#ifndef SWIGJS
+ %nodefaultdtor dialect::ACALayout;
+ %nodefaultdtor dialect::Graph;
+ %nodefaultdtor dialect::Node;
+ %nodefaultdtor dialect::Edge;
+ 
+ %include "libdialect/commontypes.h"
++#endif
+ 
+ %template(Chars) std::vector<char>;
+ %template(Unsigneds) std::vector<unsigned>;
+@@ -228,12 +238,14 @@ class ColaException {
+ %template(ColaClusters) std::vector<cola::Cluster*>;
+ %template(AvoidPoints) std::vector<Avoid::Point>;
+ %template(AvoidCheckpoints) std::vector<Avoid::Checkpoint>;
++#ifndef SWIGJS
+ %template(OrderedAlignmentPtrs) std::vector<dialect::OrderedAlignment*>;
+ %template(TreePtrs) std::vector<std::shared_ptr<dialect::Tree>>;
+ %template(ChainPtrs) std::vector<std::shared_ptr<dialect::Chain>>;
+ %template(DialectNodes) std::vector<std::shared_ptr<dialect::Node>>;
+ %template(DialectNodeLookup) std::map<dialect::id_type, std::shared_ptr<dialect::Node>>;
+ %template(DialectNodeDeques) std::vector<std::deque<std::shared_ptr<dialect::Node>>>;
++#endif
+ 
+ %inline %{
+ void doubleArraySet(double *a, int i, double val) {
+@@ -259,6 +271,7 @@ void deleteDoubleArray(double* a) {
+ 
+ %rename(getVarConst) topology::Node::getVar() const;
+ 
++#ifndef SWIGJS
+ %rename(DialectNode) dialect::Node;
+ %rename(DialectEdge) dialect::Edge;
+ 
+@@ -273,6 +286,7 @@ void deleteDoubleArray(double* a) {
+ %shared_ptr(dialect::FaceSet)
+ %shared_ptr(dialect::TreePlacement)
+ %shared_ptr(dialect::Chain)
++#endif
+ 
+ /* %warnfilter(315) dialect::Edge; */
+ %ignore dialect::Edge::m_tgt;
+@@ -306,6 +320,7 @@ void deleteDoubleArray(double* a) {
+ %include "libtopology/cola_topology_addon.h"
+ %include "libtopology/orthogonal_topology.h"
+ 
++#ifndef SWIGJS
+ %include "libdialect/aca.h"
+ %include "libdialect/chains.h"
+ %include "libdialect/constraints.h"
+@@ -322,4 +337,5 @@ void deleteDoubleArray(double* a) {
+ %include "libdialect/routing.h"
+ %include "libdialect/treeplacement.h"
+ %include "libdialect/trees.h"
++#endif
+ 
+diff --git a/cola/configure.ac b/cola/configure.ac
+index a79e1a59..d2d15678 100644
+--- a/cola/configure.ac
++++ b/cola/configure.ac
+@@ -8,7 +8,6 @@ AC_ENABLE_STATIC
+ AC_ENABLE_SHARED
+ AC_PROG_CXX
+ AC_PROG_CC
+-AC_PROG_LIBTOOL
+ LT_INIT
+ AC_PROG_INSTALL
+ #AC_DEFINE(TRACE_LOGGING)
+@@ -61,5 +60,20 @@ AH_BOTTOM([
+   
+ ])
+ 
+-AC_CONFIG_FILES([Makefile libcola/Makefile libcola/tests/Makefile libvpsc/Makefile libvpsc/tests/Makefile libtopology/Makefile libtopology/tests/Makefile libavoid/Makefile libavoid/tests/Makefile libdialect/Makefile libdialect/tests/Makefile libcola/libcola.pc libavoid/libavoid.pc libvpsc/libvpsc.pc libtopology/libtopology.pc libdialect/libdialect.pc])
++AC_CONFIG_FILES([Makefile libcola/Makefile libcola/tests/Makefile libvpsc/Makefile libvpsc/tests/Makefile libtopology/Makefile libtopology/tests/Makefile libavoid/Makefile libavoid/tests/Makefile libcola/libcola.pc libavoid/libavoid.pc libvpsc/libvpsc.pc libtopology/libtopology.pc])
++
++AC_ARG_ENABLE([dialect],
++  AS_HELP_STRING(
++    [--disable-dialect],
++    [Turn off libdialect @<:@default=no@:>@]
++  ),
++  AS_CASE(${enableval},
++    [yes], [dialect=true],
++    [no], [dialect=false],
++    AC_MSG_ERROR([bad value ${enableval} for --disable-dialect])
++  ),
++  [dialect=false])
++AM_CONDITIONAL([DIALECT], [test x$dialect = xtrue])
++AM_COND_IF([DIALECT], [AC_CONFIG_FILES([libdialect/Makefile libdialect/tests/Makefile libdialect/libdialect.pc])])
++
+ AC_OUTPUT
+diff --git a/cola/libcola/tests/Makefile.am b/cola/libcola/tests/Makefile.am
+index a73ff824..5f9b1edb 100644
+--- a/cola/libcola/tests/Makefile.am
++++ b/cola/libcola/tests/Makefile.am
+@@ -38,7 +38,6 @@ unsatisfiable_SOURCES = unsatisfiable.cpp
+ 
+ invalid_SOURCES = invalid.cpp 
+ 
+-makefeasible_LDADD = $(LDADD) $(top_srcdir)/libavoid/libavoid.la
+ makefeasible_SOURCES = makefeasible02.cpp 
+ 
+ shortest_paths_SOURCES = shortest_paths.cpp
+@@ -55,7 +54,7 @@ shortest_paths_SOURCES = shortest_paths.cpp
+ #convex_hull_SOURCES = convex_hull.cpp
+ #convex_hull_LDADD = $(LDADD) -lcairo -lcairomm-1.0
+ #aarontest_SOURCES = aarontest.cpp
+-#aarontest_LDADD = $(top_srcdir)/libcola/libcola.la $(top_builddir)/libvpsc/libvpsc.la -lcairo -lcairomm-1.0
++#aarontest_LDADD = $(LDADD) -lcairo -lcairomm-1.0
+ #qo1_SOURCES = qo1.c
+ #qo1_LDADD = -L$(mosek_home)/bin -lmosek -lguide -limf
+ #small_graph_SOURCES = small_graph.cpp 
+diff --git a/cola/libdialect/tests/Makefile.am b/cola/libdialect/tests/Makefile.am
+index d2e5a42d..b19d25d6 100644
+--- a/cola/libdialect/tests/Makefile.am
++++ b/cola/libdialect/tests/Makefile.am
+@@ -104,11 +104,11 @@ treeplacement03_SOURCES = treeplacement03.cpp
+ trees_SOURCES = trees.cpp
+ trees2_SOURCES = trees2.cpp
+ vpsc01_SOURCES = vpsc01.cpp
+-holasbgn01_SOURCES = holasbgn01.cpp
+-holasbgn02_SOURCES = holasbgn02.cpp
+-holametro01_SOURCES = holametro01.cpp
+-holasbgn03_SOURCES = holasbgn03.cpp
+-holasbgn04_SOURCES = holasbgn04.cpp
+-holaRand_SOURCES = holaRand.cpp
++#holasbgn01_SOURCES = holasbgn01.cpp
++#holasbgn02_SOURCES = holasbgn02.cpp
++#holametro01_SOURCES = holametro01.cpp
++#holasbgn03_SOURCES = holasbgn03.cpp
++#holasbgn04_SOURCES = holasbgn04.cpp
++#holaRand_SOURCES = holaRand.cpp
+ 
+ TESTS = $(check_PROGRAMS)

@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "module": "NodeNext",
+    "outDir": "dist",
+    "rootDir": "lib",
+    "strict": true,
+    "target": "es6",
+    "types": [ "node" ],
+    "skipLibCheck": true
+  },
+  "include": ["lib", "dist/binding.d.ts", "dist/cola.d.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

@@ -1,0 +1,1 @@
+%include "deps/adaptagrams/cola/adaptagrams.i"
