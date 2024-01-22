@@ -1,7 +1,7 @@
 import { expect, describe, it } from 'vitest'
 import createModule from '.'
 
-describe('wasm', async () => {
+describe('module', async () => {
   const module = await createModule();
 
   it('constructs a point', () => {

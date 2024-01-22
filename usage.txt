@@ -1,32 +1,24 @@
 List of available commands:
 
-npm install                   install dependencies and initialize submodules
-npm test                      run the unit tests
-npm run dist                  create the distribution files (under 'dist')
-npm run lint                  lint the TypeScript sources
-npm run help                  print this help message
-npm run swig:diff             create a patch for the SWIG project
-npm run swig:patch            patch the SWIG project (under 'deps/swig')
-npm run swig:reconf           autoreconf the SWIG project
-npm run swig:config           configure SWIG project
-npm run swig:make             build the SWIG project
-npm run swig:check            check the SWIG project
-npm run swig:clean            clean the SWIG build artifacts
-npm run swig:generate         generate the C++ binding source using SWIG
-npm run cola:diff             create a patch for the COLA project
-npm run cola:patch            patch the COLA project (under 'deps/adaptagrams/cola')
-npm run cola:reconf           autoreconf the COLA project
-npm run cola:node:config      configure COLA Native targets
-npm run cola:node:make        build the COLA Native targets
-npm run cola:node:check       check the COLA Native targets
-npm run cola:node:clean       clean the COLA Native targets
-npm run cola:wasm:config      configure COLA Wasm targets
-npm run cola:wasm:make        build the COLA Wasm targets
-npm run cola:wasm:check       check the COLA Wasm targets
-npm run cola:wasm:clean       clean the COLA Wasm targets
-npm run bind:node:config      configure binding Native targets
-npm run bind:node:make        build the binding Native targets
-npm run bind:node:clean       clean the binding Native targets
-npm run bind:wasm:config      configure binding Wasm targets
-npm run bind:wasm:make        build the binding Wasm targets
-npm run bind:wasm:clean       clean the binding Wasm targets
+npm install              install package dependencies and initialize git submodules
+npm test                 lint TypeScript sources and run unit tests
+npm run dist             create distribution files under 'dist' folder
+npm run help             print this help message
+npm run swig:diff        update patch for SWIG
+npm run swig:patch       apply patch to SWIG
+npm run swig:reconf      autoreconf SWIG
+npm run swig:config      configure SWIG
+npm run swig:make        build SWIG
+npm run swig:check       run SWIG unit tests
+npm run swig:clean       clean SWIG build artifacts
+npm run swig:generate    generate C++ binding source using SWIG
+npm run cola:diff        update patch for COLA
+npm run cola:patch       apply patch to COLA
+npm run cola:reconf      autoreconf COLA
+npm run cola:config      configure COLA
+npm run cola:make        build COLA libraries
+npm run cola:check       run COLA unit tests
+npm run cola:clean       clean COLA build artifacts
+npm run bind:config      configure binding
+npm run bind:make        build binding
+npm run bind:clean       clean binding build artifacts

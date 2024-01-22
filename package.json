@@ -33,8 +33,10 @@
     "emnapi": "^0.45.0",
     "eslint": "^8.56.0",
     "husky": "^8.0.0",
+    "lint-staged": "^15.2.0",
     "node-addon-api": "^7.1.0",
     "node-api-headers": "^1.1.0",
+    "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "vitest": "^1.2.1"
   },
@@ -50,11 +52,31 @@
   "prettier": {
     "printWidth": 100
   },
+  "eslintConfig": {
+    "root": true,
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": [
+        "./tsconfig.json"
+      ]
+    },
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "ignorePatterns": [
+      "**/*.spec.ts"
+    ]
+  },
+  "lint-staged": {
+    "*.ts": "eslint --cache --fix"
+  },
   "scripts": {
-    "prepublishOnly": "npm run lint && npm run dist && npm run test",
+    "prepublishOnly": "tsc && (git diff --exit-code --quiet --ignore-submodules=dirty HEAD || (echo 'Please commit your changes first.' && exit 1))",
     "install": "husky install && git submodule update --init",
-    "dist": "cp -f build-bind-wasm/binding.* dist && tsc",
-    "pretest": "eslint lib",
     "test": "vitest run",
     "help": "cat usage.txt",
     "swig:diff": "git -C deps/swig diff -p > swig.patch",
@@ -68,19 +90,12 @@
     "cola:diff": "git -C deps/adaptagrams diff -p > cola.patch",
     "cola:patch": "git -C deps/adaptagrams restore . && git -C deps/adaptagrams clean -f && git -C deps/adaptagrams apply ../../cola.patch",
     "cola:reconf": "mkdir -p deps/adaptagrams/cola/m4 && autoreconf -ivf deps/adaptagrams/cola",
-    "cola:node:config": "mkdir -p build-cola-node && cd build-cola-node && ../deps/adaptagrams/cola/configure --disable-dialect",
-    "cola:node:make": "make -C build-cola-node CPPFLAGS=-I..",
-    "cola:node:check": "for dir in build-cola-node/*/tests; do mkdir -p \"${dir}/output\"; done && make -C build-cola-node check CPPFLAGS=-I../..",
-    "cola:node:clean": "make -C build-cola-node clean",
-    "cola:wasm:config": "mkdir -p build-cola-wasm && cd build-cola-wasm && ac_cv_exeext=.cjs emconfigure ../deps/adaptagrams/cola/configure --disable-dialect --disable-shared",
-    "cola:wasm:make": "emmake make -C build-cola-wasm CPPFLAGS='-I.. -fwasm-exceptions'",
-    "cola:wasm:check": "for dir in build-cola-wasm/*/tests; do mkdir -p \"${dir}/output\"; done && emmake make -C build-cola-wasm check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
-    "cola:wasm:clean": "emmake make -C build-cola-wasm clean",
-    "bind:node:config": "cmake-js configure -O build-bind-node -m",
-    "bind:node:make": "make -C build-bind-node",
-    "bind:node:clean": "make -C build-bind-node clean",
-    "bind:wasm:config": "cmake-js configure -O build-bind-wasm -m $(echo `emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
-    "bind:wasm:make": "emmake make -C build-bind-wasm",
-    "bind:wasm:clean": "emmake make -C build-bind-wasm clean"
+    "cola:config": "mkdir -p build-cola && cd build-cola && ac_cv_exeext=.cjs emconfigure ../deps/adaptagrams/cola/configure --disable-dialect --disable-shared",
+    "cola:make": "emmake make -C build-cola CPPFLAGS='-I.. -fwasm-exceptions'",
+    "cola:check": "for dir in build-cola/*/tests; do mkdir -p \"${dir}/output\"; done && emmake make -C build-cola check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
+    "cola:clean": "emmake make -C build-cola clean",
+    "bind:config": "cmake-js configure -O build-bind -m $(echo `emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
+    "bind:make": "emmake make -C build-bind && cp -f build-bind/binding.* dist",
+    "bind:clean": "emmake make -C build-bind clean"
   }
 }
