@@ -9,6 +9,6 @@
     "types": [ "node" ],
     "skipLibCheck": true
   },
-  "include": ["lib", "dist/binding.d.ts", "dist/cola.d.ts"],
+  "include": ["lib/**/*"],
   "exclude": ["**/*.spec.ts"]
 }
