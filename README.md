@@ -18,18 +18,15 @@ JavaScript Node-API port of the [Adaptagrams](http://www.adaptagrams.org/) proje
 
 ```sh
 sudo apt install automake cmake g++ git libpcre2-dev python3
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 nvm install --lts && nvm use --lts
 npm install -g @types/node emnapi node-addon-api node-gyp typescript
 git clone https://github.com/diegosogari/cola.git
-cd cola && npm install && npm run build && npm test
+cd cola && npm run help
+npm install && npm run build && npm test
 ```
 
 ## Usage
-
-```sh
-npm install @diegosogari/cola
-```
 
 ```js
 import instantiate from '@diegosogari/cola'

@@ -81,7 +81,7 @@
     "prepublishOnly": "git submodule foreach '`git restore .`' && npm version patch",
     "postinstall": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
     "test": "vitest run --dir lib",
-    "help": "cat usage.txt",
+    "help": "cat help.txt",
     "build": "npm run swig:build && npm run cola:build && npm run bind:build",
     "swig:diff": "git -C deps/swig diff -p > swig.patch",
     "swig:patch": "git -C deps/swig restore . && git -C deps/swig clean -f && git -C deps/swig apply ../../swig.patch",

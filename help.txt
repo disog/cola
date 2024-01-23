@@ -1,5 +1,3 @@
-List of commands:
-
 npm install               install all dependencies
 npm test                  run this project's tests
 npm run build             build the project from scratch
