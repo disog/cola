@@ -5,3 +5,4 @@ node_modules
 
 !dist/binding.d.ts
 src/cola.cc
+.eslintcache

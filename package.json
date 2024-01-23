@@ -78,7 +78,7 @@
     ]
   },
   "scripts": {
-    "prepublishOnly": "tsc && (git diff --exit-code --quiet --ignore-submodules=dirty HEAD || (echo 'Please commit your changes first.' && exit 1))",
+    "prepublishOnly": "git diff --exit-code --quiet --ignore-submodules=dirty HEAD || (echo 'Please commit your changes first.' && exit 1)",
     "postinstall": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
     "test": "vitest run -r lib",
     "help": "cat usage.txt",
