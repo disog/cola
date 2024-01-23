@@ -36,6 +36,7 @@
     "lint-staged": "^15.2.0",
     "node-addon-api": "^7.1.0",
     "node-api-headers": "^1.1.0",
+    "node-gyp": "^10.0.1",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "vitest": "^1.2.1"
@@ -86,7 +87,7 @@
     "swig:diff": "git -C deps/swig diff -p > swig.patch",
     "swig:patch": "git -C deps/swig restore . && git -C deps/swig clean -f && git -C deps/swig apply ../../swig.patch",
     "swig:reconf": "autoreconf -ivf -I Tools/config deps/swig",
-    "swig:config": "mkdir -p build-swig && cd build-swig && ../deps/swig/configure --disable-ccache --without-alllang --with-javascript",
+    "swig:config": "mkdir -p build-swig && cd build-swig && EMSDK_QUIET=1 ../deps/swig/configure --disable-ccache --without-alllang --with-javascript --with-emsdkdir=../deps/emsdk",
     "swig:make": "make -C build-swig",
     "swig:check": "echo '{}' > build-swig/Examples/test-suite/javascript/package.json && make -C build-swig check",
     "swig:clean": "make -C build-swig clean",

@@ -1,11 +1,10 @@
 diff --git a/Examples/javascript/package.json b/Examples/javascript/package.json
 new file mode 100644
-index 000000000..9e26dfeeb
+index 000000000..0967ef424
 --- /dev/null
 +++ b/Examples/javascript/package.json
 @@ -0,0 +1 @@
 +{}
-\ No newline at end of file
 diff --git a/Examples/test-suite/common.mk b/Examples/test-suite/common.mk
 index fee130277..46ad92d1a 100644
 --- a/Examples/test-suite/common.mk
@@ -67,12 +66,11 @@ index d016af17e..166155f3a 100644
  class FooBar {
 diff --git a/Examples/test-suite/javascript/package.json b/Examples/test-suite/javascript/package.json
 new file mode 100644
-index 000000000..9e26dfeeb
+index 000000000..0967ef424
 --- /dev/null
 +++ b/Examples/test-suite/javascript/package.json
 @@ -0,0 +1 @@
 +{}
-\ No newline at end of file
 diff --git a/Lib/javascript/napi/javascriptruntime.swg b/Lib/javascript/napi/javascriptruntime.swg
 index 7311aca25..f445cc887 100644
 --- a/Lib/javascript/napi/javascriptruntime.swg
@@ -85,3 +83,76 @@ index 7311aca25..f445cc887 100644
  
  #include <errno.h>
  #include <limits.h>
+diff --git a/configure.ac b/configure.ac
+index 060c020b9..ac9c1e9e3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1193,39 +1193,36 @@ else
+     fi
+     AC_CHECK_PROGS(NODENPM, npm)
+     JSNAPIENABLED=
++    NODE_MODULES=
+     if test -n "$NODENPM"; then
+-      NODENPM_PREFIX=$($NODENPM config get prefix)
++      NODE_MODULES=$($NODENPM root)
++      if test ! -d "$NODE_MODULES"; then
++        NODE_MODULES=$($NODENPM root -g)
++      fi
+ 
+-      AC_MSG_CHECKING([for Node-API (napi) header directory])
+-      if test -n "$NODENPM_PREFIX"; then
+-        NODENAPI_DIR=$NODENPM_PREFIX/lib/node_modules/node-addon-api
++      if test -d "$NODE_MODULES"; then
++        AC_MSG_CHECKING([for Node-API (napi) header directory])
++        NODENAPI_DIR=$NODE_MODULES/node-addon-api
+         if test -f "$NODENAPI_DIR/napi.h"; then
+           JSNAPIENABLED=1
+           AC_SUBST(NODENAPI_DIR)
++          AC_MSG_RESULT([$NODENAPI_DIR])
++        else
++          AC_MSG_RESULT([not found])
+         fi
+-      fi
+-      if test -n "$JSNAPIENABLED"; then
+-        AC_MSG_RESULT([$NODENAPI_DIR])
+-      else
+-        AC_MSG_RESULT([not found])
+-      fi
+-
+-      AC_MSG_CHECKING([for TypeScript @types/node])
+-      if test -n "$NODENPM_PREFIX"; then
+-        NODETYPES_DIR=$NODENPM_PREFIX/lib/node_modules/@types
++        
++        AC_MSG_CHECKING([for TypeScript @types/node])
++        NODETYPES_DIR=$NODE_MODULES/@types
+         if test -f "$NODETYPES_DIR/node/index.d.ts"; then
+-          true
+           AC_SUBST(NODETYPES_DIR)
++          AC_MSG_RESULT([$NODETYPES_DIR])
++        else
++          AC_MSG_RESULT([not found])
+         fi
+       fi
+-      if test -n "$JSNAPIENABLED"; then
+-        AC_MSG_RESULT([$NODETYPES_DIR])
+-      else
+-        AC_MSG_RESULT([not found])
+-      fi
+     fi
+     AC_SUBST(JSNAPIENABLED)
+-    AC_SUBST(NODENPM_PREFIX)
++    AC_SUBST(NODE_MODULES)
+   fi
+ 
+   #----------------------------------------------------------------
+@@ -1409,8 +1406,8 @@ AC_SUBST(EMSDK)
+ #----------------------------------------------------------------
+ 
+ AC_MSG_CHECKING(for emnapi)
+-if test -r "${NODENPM_PREFIX}/lib/node_modules/emnapi/include/emnapi.h" ; then
+-  EMNAPI_DIR="${NODENPM_PREFIX}/lib/node_modules/emnapi"
++if test -r "${NODE_MODULES}/emnapi/include/emnapi.h" ; then
++  EMNAPI_DIR="${NODE_MODULES}/emnapi"
+   AC_MSG_RESULT(found in $EMNAPI_DIR)
+ else
+   AC_MSG_RESULT(not found)
