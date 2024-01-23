@@ -1,6 +1,6 @@
 {
   "name": "@diegosogari/cola",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "JavaScript Node-API port of the Adaptagrams project",
   "keywords": [
     "graph",
