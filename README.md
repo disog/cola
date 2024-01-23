@@ -22,13 +22,17 @@ curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 nvm install --lts && nvm use --lts
 npm install -g @types/node emnapi node-addon-api node-gyp typescript
 git clone https://github.com/diegosogari/cola.git
+cd cola && npm install && npm run build && npm test
 ```
 
 ## Usage
 
-```js
-import createModule from '@diegosogari/cola'
+```sh
+npm install @diegosogari/cola
+```
 
-const module = await createModule();
-// ...
+```js
+import instantiate from '@diegosogari/cola'
+const cola = await instantiate();
+// see dist/cola.d.ts
 ```

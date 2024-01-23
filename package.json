@@ -1,7 +1,7 @@
 {
   "name": "@diegosogari/cola",
   "version": "0.1.0",
-  "description": "JavaScript Node-API port of the [Adaptagrams](http://www.adaptagrams.org/) project",
+  "description": "JavaScript Node-API port of the Adaptagrams project",
   "keywords": [
     "graph",
     "layout"
@@ -78,9 +78,9 @@
     ]
   },
   "scripts": {
-    "prepublishOnly": "git diff --exit-code --quiet --ignore-submodules=dirty HEAD || (echo 'Please commit your changes first.' && exit 1)",
+    "prepublishOnly": "git submodule foreach '`git restore .`' && npm version patch",
     "postinstall": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
-    "test": "vitest run -r lib",
+    "test": "vitest run --dir lib",
     "help": "cat usage.txt",
     "build": "npm run swig:build && npm run cola:build && npm run bind:build",
     "swig:diff": "git -C deps/swig diff -p > swig.patch",

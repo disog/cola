@@ -1,11 +1,9 @@
-List of available commands:
+List of commands:
 
 npm install               install all dependencies
 npm test                  run this project's tests
 npm run build             build the project from scratch
 npm run help              print this help message
-
-List of available sub-commands:
 
 npm run swig:diff         save new patch for SWIG
 npm run swig:patch        apply existing patch to SWIG
@@ -15,6 +13,7 @@ npm run swig:make         compile the SWIG binary
 npm run swig:check        run SWIG unit tests
 npm run swig:clean        clean SWIG build artifacts
 npm run swig:build        build the the SWIG project from scratch
+
 npm run cola:diff         save new patch for COLA
 npm run cola:patch        apply existing patch to COLA
 npm run cola:reconf       autoreconf the COLA project
@@ -23,6 +22,7 @@ npm run cola:make         compile the COLA libraries
 npm run cola:check        run COLA unit tests
 npm run cola:clean        clean COLA build artifacts
 npm run cola:build        build the the COLA project from scratch
+
 npm run bind:generate     generate the C++ binding using SWIG
 npm run bind:config       configure the C++ binding project
 npm run bind:make         compile the C++ binding
