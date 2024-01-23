@@ -4,3 +4,6 @@
 [submodule "deps/swig"]
 	path = deps/swig
 	url = https://github.com/mmomtchev/swig.git
+[submodule "deps/emsdk"]
+	path = deps/emsdk
+	url = https://github.com/emscripten-core/emsdk.git

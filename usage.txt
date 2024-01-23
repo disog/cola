@@ -1,24 +1,30 @@
 List of available commands:
 
-npm install              install package dependencies and initialize git submodules
-npm test                 lint TypeScript sources and run unit tests
-npm run dist             create distribution files under 'dist' folder
-npm run help             print this help message
-npm run swig:diff        update patch for SWIG
-npm run swig:patch       apply patch to SWIG
-npm run swig:reconf      autoreconf SWIG
-npm run swig:config      configure SWIG
-npm run swig:make        build SWIG
-npm run swig:check       run SWIG unit tests
-npm run swig:clean       clean SWIG build artifacts
-npm run swig:generate    generate C++ binding source using SWIG
-npm run cola:diff        update patch for COLA
-npm run cola:patch       apply patch to COLA
-npm run cola:reconf      autoreconf COLA
-npm run cola:config      configure COLA
-npm run cola:make        build COLA libraries
-npm run cola:check       run COLA unit tests
-npm run cola:clean       clean COLA build artifacts
-npm run bind:config      configure binding
-npm run bind:make        build binding
-npm run bind:clean       clean binding build artifacts
+npm install               install all dependencies
+npm test                  run this project's tests
+npm run build             build the project from scratch
+npm run help              print this help message
+
+List of available sub-commands:
+
+npm run swig:diff         save new patch for SWIG
+npm run swig:patch        apply existing patch to SWIG
+npm run swig:reconf       autoreconf the SWIG project
+npm run swig:config       configure the SWIG project
+npm run swig:make         compile the SWIG binary
+npm run swig:check        run SWIG unit tests
+npm run swig:clean        clean SWIG build artifacts
+npm run swig:build        build the the SWIG project from scratch
+npm run cola:diff         save new patch for COLA
+npm run cola:patch        apply existing patch to COLA
+npm run cola:reconf       autoreconf the COLA project
+npm run cola:config       configure the COLA project
+npm run cola:make         compile the COLA libraries
+npm run cola:check        run COLA unit tests
+npm run cola:clean        clean COLA build artifacts
+npm run cola:build        build the the COLA project from scratch
+npm run bind:generate     generate the C++ binding using SWIG
+npm run bind:config       configure the C++ binding project
+npm run bind:make         compile the C++ binding
+npm run bind:clean        clean C++ binding build artifacts
+npm run bind:build        build the the C++ binding project from scratch

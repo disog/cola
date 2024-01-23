@@ -72,13 +72,17 @@
     ]
   },
   "lint-staged": {
-    "*.ts": "eslint --cache --fix"
+    "lib/*.ts": [
+      "eslint --cache",
+      "prettier --write"
+    ]
   },
   "scripts": {
     "prepublishOnly": "tsc && (git diff --exit-code --quiet --ignore-submodules=dirty HEAD || (echo 'Please commit your changes first.' && exit 1))",
-    "install": "husky install && git submodule update --init",
-    "test": "vitest run",
+    "postinstall": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
+    "test": "vitest run -r lib",
     "help": "cat usage.txt",
+    "build": "npm run swig:build && npm run cola:build && npm run bind:build",
     "swig:diff": "git -C deps/swig diff -p > swig.patch",
     "swig:patch": "git -C deps/swig restore . && git -C deps/swig clean -f && git -C deps/swig apply ../../swig.patch",
     "swig:reconf": "autoreconf -ivf -I Tools/config deps/swig",
@@ -86,16 +90,19 @@
     "swig:make": "make -C build-swig",
     "swig:check": "echo '{}' > build-swig/Examples/test-suite/javascript/package.json && make -C build-swig check",
     "swig:clean": "make -C build-swig clean",
-    "swig:generate": "./build-swig/preinst-swig -javascript -typescript -napi -c++ -DSWIGJS -DNDEBUG -outdir dist -o src/cola.cc src/cola.i",
+    "swig:build": "npm run swig:patch && npm run swig:reconf && npm run swig:config && npm run swig:make",
     "cola:diff": "git -C deps/adaptagrams diff -p > cola.patch",
     "cola:patch": "git -C deps/adaptagrams restore . && git -C deps/adaptagrams clean -f && git -C deps/adaptagrams apply ../../cola.patch",
     "cola:reconf": "mkdir -p deps/adaptagrams/cola/m4 && autoreconf -ivf deps/adaptagrams/cola",
-    "cola:config": "mkdir -p build-cola && cd build-cola && ac_cv_exeext=.cjs emconfigure ../deps/adaptagrams/cola/configure --disable-dialect --disable-shared",
-    "cola:make": "emmake make -C build-cola CPPFLAGS='-I.. -fwasm-exceptions'",
-    "cola:check": "for dir in build-cola/*/tests; do mkdir -p \"${dir}/output\"; done && emmake make -C build-cola check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
-    "cola:clean": "emmake make -C build-cola clean",
-    "bind:config": "cmake-js configure -O build-bind -m $(echo `emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
-    "bind:make": "emmake make -C build-bind && cp -f build-bind/binding.* dist",
-    "bind:clean": "emmake make -C build-bind clean"
+    "cola:config": "mkdir -p build-cola && cd build-cola && ac_cv_exeext=.cjs ../deps/emsdk/upstream/emscripten/emconfigure ../deps/adaptagrams/cola/configure --disable-dialect --disable-shared",
+    "cola:make": "./deps/emsdk/upstream/emscripten/emmake make -C build-cola CPPFLAGS='-I.. -fwasm-exceptions'",
+    "cola:check": "for dir in build-cola/*/tests; do mkdir -p \"${dir}/output\"; done && ./deps/emsdk/upstream/emscripten/emmake make -C build-cola check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
+    "cola:clean": "./deps/emsdk/upstream/emscripten/emmake make -C build-cola clean",
+    "cola:build": "npm run cola:patch && npm run cola:reconf && npm run cola:config && npm run cola:make",
+    "bind:generate": "./build-swig/preinst-swig -javascript -typescript -napi -c++ -DSWIGJS -DNDEBUG -outdir dist -o src/cola.cc src/cola.i",
+    "bind:config": "cmake-js configure -O build-bind -m $(echo `./deps/emsdk/upstream/emscripten/emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
+    "bind:make": "./deps/emsdk/upstream/emscripten/emmake make -C build-bind && cp -f build-bind/binding.* dist",
+    "bind:clean": "./deps/emsdk/upstream/emscripten/emmake make -C build-bind clean",
+    "bind:build": "npm run bind:generate && npm run bind:config && npm run bind:make"
   }
 }
