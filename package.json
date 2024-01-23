@@ -80,7 +80,7 @@
   },
   "scripts": {
     "prepublishOnly": "git submodule foreach '`git restore .`' && npm version patch",
-    "postinstall": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
+    "prepare": "husky install && git submodule update --init && cd deps/emsdk && ./emsdk install latest && ./emsdk activate latest",
     "test": "vitest run --dir lib",
     "help": "cat help.txt",
     "build": "npm run swig:build && npm run cola:build && npm run bind:build",
