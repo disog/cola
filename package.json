@@ -100,7 +100,7 @@
     "cola:check": "for dir in build-cola/*/tests; do mkdir -p \"${dir}/output\"; done && ./deps/emsdk/upstream/emscripten/emmake make -C build-cola check CPPFLAGS='-I../.. -fwasm-exceptions' LDFLAGS='-fwasm-exceptions -sNODERAWFS -sALLOW_MEMORY_GROWTH' LOG_COMPILER=node LOG_FLAGS=--trace-uncaught",
     "cola:clean": "./deps/emsdk/upstream/emscripten/emmake make -C build-cola clean",
     "cola:build": "npm run cola:patch && npm run cola:reconf && npm run cola:config && npm run cola:make",
-    "bind:generate": "./build-swig/preinst-swig -javascript -typescript -napi -c++ -DSWIGJS -DNDEBUG -outdir dist -o src/cola.cc src/cola.i",
+    "bind:generate": "./build-swig/preinst-swig -javascript -typescript -napi -c++ -DNDEBUG -Ideps/adaptagrams/cola -outdir dist -o src/cola.cc src/cola.i",
     "bind:config": "cmake-js configure -O build-bind -m $(echo `./deps/emsdk/upstream/emscripten/emcmake echo 2>/dev/null` | sed 's/-D/--CD/g')",
     "bind:make": "./deps/emsdk/upstream/emscripten/emmake make -C build-bind && cp -f build-bind/binding.* dist",
     "bind:clean": "./deps/emsdk/upstream/emscripten/emmake make -C build-bind clean",

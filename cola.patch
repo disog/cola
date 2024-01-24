@@ -11,121 +11,6 @@ index 180f2ae9..c902ad5c 100644
 +if DIALECT
 +  SUBDIRS += libdialect
 +endif
-diff --git a/cola/adaptagrams.i b/cola/adaptagrams.i
-index e3199dac..b252662e 100644
---- a/cola/adaptagrams.i
-+++ b/cola/adaptagrams.i
-@@ -35,6 +35,7 @@
- #include <libtopology/cola_topology_addon.h>
- #include <libavoid/libavoid.h>
- #include <libtopology/orthogonal_topology.h>
-+#ifndef SWIGJS
- #include <libdialect/aca.h>
- #include <libdialect/chains.h>
- #include <libdialect/commontypes.h>
-@@ -52,6 +53,7 @@
- #include <libdialect/routing.h>
- #include <libdialect/treeplacement.h>
- #include <libdialect/trees.h>
-+#endif
- /* Includes the header in the wrapper code */
- 
- using namespace Avoid;
-@@ -59,7 +61,9 @@ using namespace cola;
- using namespace hull;
- using namespace vpsc;
- using namespace topology;
-+#ifndef SWIGJS
- using namespace dialect;
-+#endif
- 
- %}
- 
-@@ -107,6 +111,7 @@ using namespace dialect;
- %ignore topology::assertNoZeroLengthEdgeSegments(const Edges& es);
- %ignore topology::compute_stress(const Edges&);
- %ignore topology::printEdges(const Edges&);
-+#ifndef SWIGJS
- %ignore dialect::Node::operator=(const dialect::Node&);
- %ignore dialect::Edge::operator=(const dialect::Edge&);
- %ignore dialect::Graph::operator=(const Graph);
-@@ -118,13 +123,16 @@ using namespace dialect;
- %ignore dialect::identifyRootNode(const Graph&);
- %ignore dialect::negateSepDir(SepDir);
- %ignore dialect::swap(Graph&, Graph&);
-+#endif
- 
- %include "std_string.i"
- %include "std_vector.i"
- %include "std_deque.i"
- %include "std_pair.i"
- %include "std_map.i"
-+#ifndef SWIGJS
- %include "std_shared_ptr.i"
-+#endif
- 
- #ifdef SWIGJAVA
- /* Wrap every C++ action in try/catch statement so we convert all 
-@@ -202,12 +210,14 @@ class ColaException {
- %nodefaultdtor topology::Edge;
- %nodefaultdtor topology::EdgePoint;
- %nodefaultdtor topology::ColaTopologyAddon;
-+#ifndef SWIGJS
- %nodefaultdtor dialect::ACALayout;
- %nodefaultdtor dialect::Graph;
- %nodefaultdtor dialect::Node;
- %nodefaultdtor dialect::Edge;
- 
- %include "libdialect/commontypes.h"
-+#endif
- 
- %template(Chars) std::vector<char>;
- %template(Unsigneds) std::vector<unsigned>;
-@@ -228,12 +238,14 @@ class ColaException {
- %template(ColaClusters) std::vector<cola::Cluster*>;
- %template(AvoidPoints) std::vector<Avoid::Point>;
- %template(AvoidCheckpoints) std::vector<Avoid::Checkpoint>;
-+#ifndef SWIGJS
- %template(OrderedAlignmentPtrs) std::vector<dialect::OrderedAlignment*>;
- %template(TreePtrs) std::vector<std::shared_ptr<dialect::Tree>>;
- %template(ChainPtrs) std::vector<std::shared_ptr<dialect::Chain>>;
- %template(DialectNodes) std::vector<std::shared_ptr<dialect::Node>>;
- %template(DialectNodeLookup) std::map<dialect::id_type, std::shared_ptr<dialect::Node>>;
- %template(DialectNodeDeques) std::vector<std::deque<std::shared_ptr<dialect::Node>>>;
-+#endif
- 
- %inline %{
- void doubleArraySet(double *a, int i, double val) {
-@@ -259,6 +271,7 @@ void deleteDoubleArray(double* a) {
- 
- %rename(getVarConst) topology::Node::getVar() const;
- 
-+#ifndef SWIGJS
- %rename(DialectNode) dialect::Node;
- %rename(DialectEdge) dialect::Edge;
- 
-@@ -273,6 +286,7 @@ void deleteDoubleArray(double* a) {
- %shared_ptr(dialect::FaceSet)
- %shared_ptr(dialect::TreePlacement)
- %shared_ptr(dialect::Chain)
-+#endif
- 
- /* %warnfilter(315) dialect::Edge; */
- %ignore dialect::Edge::m_tgt;
-@@ -306,6 +320,7 @@ void deleteDoubleArray(double* a) {
- %include "libtopology/cola_topology_addon.h"
- %include "libtopology/orthogonal_topology.h"
- 
-+#ifndef SWIGJS
- %include "libdialect/aca.h"
- %include "libdialect/chains.h"
- %include "libdialect/constraints.h"
-@@ -322,4 +337,5 @@ void deleteDoubleArray(double* a) {
- %include "libdialect/routing.h"
- %include "libdialect/treeplacement.h"
- %include "libdialect/trees.h"
-+#endif
- 
 diff --git a/cola/configure.ac b/cola/configure.ac
 index a79e1a59..d2d15678 100644
 --- a/cola/configure.ac
@@ -160,6 +45,21 @@ index a79e1a59..d2d15678 100644
 +AM_COND_IF([DIALECT], [AC_CONFIG_FILES([libdialect/Makefile libdialect/tests/Makefile libdialect/libdialect.pc])])
 +
  AC_OUTPUT
+diff --git a/cola/libavoid/vertices.h b/cola/libavoid/vertices.h
+index aac43bb4..7bc6240e 100644
+--- a/cola/libavoid/vertices.h
++++ b/cola/libavoid/vertices.h
+@@ -107,8 +107,8 @@ class VertID
+ // orthogonal visibility graph since the vertices in the orthogonal graph 
+ // mostly do not correspond to shape corners or connector endpoints.
+ //
+-static const VertID dummyOrthogID(0, 0);
+-static const VertID dummyOrthogShapeID(0, 0, VertID::PROP_OrthShapeEdge);
++static const VertID dummyOrthogID{0, 0};
++static const VertID dummyOrthogShapeID{0, 0, VertID::PROP_OrthShapeEdge};
+ 
+ class ANode;
+ 
 diff --git a/cola/libcola/tests/Makefile.am b/cola/libcola/tests/Makefile.am
 index a73ff824..5f9b1edb 100644
 --- a/cola/libcola/tests/Makefile.am

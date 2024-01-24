@@ -122,7 +122,7 @@ index 060c020b9..ac9c1e9e3 100644
 -      AC_MSG_CHECKING([for TypeScript @types/node])
 -      if test -n "$NODENPM_PREFIX"; then
 -        NODETYPES_DIR=$NODENPM_PREFIX/lib/node_modules/@types
-+        
++
 +        AC_MSG_CHECKING([for TypeScript @types/node])
 +        NODETYPES_DIR=$NODE_MODULES/@types
          if test -f "$NODETYPES_DIR/node/index.d.ts"; then
